@@ -2,6 +2,7 @@ import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -112,5 +113,16 @@ public final class Test {
     @org.junit.jupiter.api.Test
     public void testArrayOf() {
         assertArrayEquals(arrayOf(String.class, "lorem", "ipsum", "dolor", "sit", "amet"), new String[]{"lorem", "ipsum", "dolor", "sit", "amet"});
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testNow() {
+        assertEquals(LocalDateTime.now().getDayOfYear(), now().getDayOfYear());
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testShiftTime() {
+        final LocalDateTime currentTime = now();
+        assertEquals(shiftTime(currentTime, 1, 2, 2, 1, 0, 0, 0), currentTime.plusYears(1).plusMonths(2).plusWeeks(2).plusDays(1));
     }
 }

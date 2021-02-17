@@ -4,6 +4,9 @@ import java.io.Closeable;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.temporal.TemporalAmount;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -228,6 +231,30 @@ public final class Utils {
         T[] array = (T[]) Array.newInstance(clazz, ts.length);
         System.arraycopy(ts, 0, array, 0, ts.length);
         return array;
+    }
+
+    /**
+     * Get the current time as {@link LocalDateTime}
+     * @return The current time
+     * */
+    public static LocalDateTime now() {
+        return LocalDateTime.now();
+    }
+
+    /**
+     * Shift the given {@link LocalDateTime} by the given amounts
+     * @param time the time to start from
+     * @param years The amount of years to shift by
+     * @param months The amount of months to shift by
+     * @param weeks The amount of weeks to shift by
+     * @param days The amount of days to shift by
+     * @param hours The amount of hours to shift by
+     * @param minutes The amount of minutes to shift by
+     * @param seconds The amount of seconds to shift by
+     * @return the new time, with the transformations applied
+     * */
+    public static LocalDateTime shiftTime(LocalDateTime time, long years, long months, long weeks, long days, long hours, long minutes, long seconds) {
+        return time.plusYears(years).plusMonths(months).plusWeeks(weeks).plusDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
     }
 
     /**
