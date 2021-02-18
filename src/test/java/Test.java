@@ -1,4 +1,5 @@
 import my.utils.Pair;
+import my.utils.Utils;
 import org.opentest4j.AssertionFailedError;
 
 import java.awt.*;
@@ -184,5 +185,22 @@ public final class Test {
         assertTrue(isCastable(new ArrayList<Object>(), List.class));
         assertFalse(isCastable("Hello", Integer.class));
         assertFalse(isCastable(new ArrayList<Object>(), String.class));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testHasToString() {
+        assertFalse(hasToString(new ArrayList<Object>()));
+        assertFalse(hasToString(new Pair<Object, Object>(null, null)));
+        assertTrue(hasToString(new Object() {
+            @Override
+            public String toString() {
+                return "";
+            }
+        }));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testToString() {
+        System.out.println(Utils.toString(new Pair<String, Integer>("Hello", -123)));
     }
 }

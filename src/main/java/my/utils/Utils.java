@@ -5,10 +5,7 @@ import java.io.File;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -301,11 +298,12 @@ public final class Utils {
 
     /**
      * Cast the array of type B to an Array of class A by casting each object separately
+     *
      * @param toCast the array to be cast
-     * @param clazz the target class of the array
+     * @param clazz  the target class of the array
      * @return the casted array
      * @throws IllegalArgumentException if the object can't be cast
-     * */
+     */
     public static <A, B> A[] castArray(B[] toCast, Class<A> clazz) {
         final A[] newArr = (A[]) Array.newInstance(clazz, toCast.length);
         for (int i = 0; i < toCast.length; i++) {
@@ -318,6 +316,7 @@ public final class Utils {
 
     /**
      * Check if the given Object o can be cast to the class c
+     *
      * @param o the object to check whether it is castable
      * @param c the class to cast to
      */
@@ -325,6 +324,42 @@ public final class Utils {
         requireNotNull(o);
         requireNotNull(c);
         return c.isInstance(o);
+    }
+
+    /**
+     * Checks if the given object has overridden the toString() method
+     *
+     * @param o the object to check on
+     * @return whether o has overridden toString()
+     */
+    public static boolean hasToString(Object o) {
+        requireNotNull(o);
+        return Arrays.stream(o.getClass().getDeclaredMethods()).anyMatch(method -> method.getName().equals("toString"));
+    }
+
+    public static String toString(Object o) {
+        if (hasToString(o)) return o.toString();
+        final StringBuilder builder = new StringBuilder(String.format("%s:\n", o.getClass().getName()));
+        builder.append("Constructors:\n");
+        Arrays.stream(o.getClass().getDeclaredConstructors()).forEach(constructor -> {
+            if (!constructor.isAccessible()) constructor.setAccessible(true);
+            builder.append(String.format("\t%s\n", Arrays.toString(constructor.getParameters())));
+        });
+        builder.append("Fields:\n");
+        Arrays.stream(o.getClass().getDeclaredFields()).forEach(field -> {
+            if (!field.isAccessible()) field.setAccessible(true);
+            try {
+                builder.append(String.format("\t%s --> %s\n", field.getName(), field.get(o).toString()));
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        });
+        builder.append("Methods:\n");
+        Arrays.stream(o.getClass().getDeclaredMethods()).forEach(method -> {
+            if (!method.isAccessible()) method.setAccessible(true);
+            builder.append(String.format("\t%s --> %s\n", method.getName(), method.getReturnType().getName()));
+        });
+        return builder.toString();
     }
 
     /**
