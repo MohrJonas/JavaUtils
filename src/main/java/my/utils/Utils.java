@@ -257,6 +257,11 @@ public final class Utils {
         return time.plusYears(years).plusMonths(months).plusWeeks(weeks).plusDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
     }
 
+    public static boolean equalsNullSafe(Object first, Object second) {
+        if(first == null || second == null) return false;
+        return first.equals(second);
+    }
+
     /**
      * Methods to use on the reduceArrayAsNeeded methode
      * FIRST -> take the first n elements from the array

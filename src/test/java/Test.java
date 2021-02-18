@@ -125,4 +125,19 @@ public final class Test {
         final LocalDateTime currentTime = now();
         assertEquals(shiftTime(currentTime, 1, 2, 2, 1, 0, 0, 0), currentTime.plusYears(1).plusMonths(2).plusWeeks(2).plusDays(1));
     }
+
+    @org.junit.jupiter.api.Test
+    public void testEqualsNullSafe() {
+        String s1 = "Hello";
+        String s2 = "Hello";
+        assertTrue(equalsNullSafe(s1, s2));
+        s1 = null;
+        assertFalse(equalsNullSafe(s1, s2));
+        s1 = "Hello";
+        s2 = null;
+        assertFalse(equalsNullSafe(s1, s2));
+        s1 = null;
+        assertFalse(equalsNullSafe(s1, s2));
+
+    }
 }
