@@ -1,10 +1,14 @@
+import my.utils.Pair;
+import org.opentest4j.AssertionFailedError;
+
 import java.awt.*;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Queue;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -138,6 +142,47 @@ public final class Test {
         assertFalse(equalsNullSafe(s1, s2));
         s1 = null;
         assertFalse(equalsNullSafe(s1, s2));
+    }
 
+    @org.junit.jupiter.api.Test
+    public void testPairOf() {
+        int a = 10;
+        String b = "Hello";
+        Pair<Integer, String> p = pairOf(a, b);
+        assertEquals(a, p.a);
+        assertEquals(b, p.b);
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testPollAll() {
+        Queue<String> q = new ArrayDeque<>();
+        q.offer("Hello");
+        q.offer("World");
+        q.offer("!");
+        assertArrayEquals(pollAll(q).toArray(), arrayOf(String.class, "Hello", "World", "!"));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testPopAll() {
+        Stack<String> s = new Stack<>();
+        s.push("Hello");
+        s.push("World");
+        s.push("!");
+        assertArrayEquals(castArray(popAll(s).toArray(), String.class), arrayOf(String.class, "!", "World", "Hello"));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testCastArray() {
+        final Object[] strings = arrayOf(Object.class, "Hello", "World", "!");
+        assertThrows(AssertionFailedError.class, () -> assertInstanceOf(String[].class, strings));
+        assertInstanceOf(String[].class, castArray(strings, String.class));
+    }
+
+    @org.junit.jupiter.api.Test
+    public void testIsCastable() {
+        assertTrue(isCastable("Hello", Object.class));
+        assertTrue(isCastable(new ArrayList<Object>(), List.class));
+        assertFalse(isCastable("Hello", Integer.class));
+        assertFalse(isCastable(new ArrayList<Object>(), String.class));
     }
 }

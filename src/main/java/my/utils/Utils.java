@@ -263,7 +263,7 @@ public final class Utils {
 
     /**
      * Null-safe variant of equals
-     * */
+     */
     public static boolean equalsNullSafe(Object first, Object second) {
         if (first == null || second == null) return false;
         return first.equals(second);
@@ -271,14 +271,14 @@ public final class Utils {
 
     /**
      * Create a {@link Pair} of the given values
-     * */
+     */
     public static <A, B> Pair<A, B> pairOf(A a, B b) {
         return new Pair<>(a, b);
     }
 
     /**
      * Poll all values from the {@link Queue} and convert them to a stream
-     * */
+     */
     public static <T> Stream<T> pollAll(Queue<T> queue) {
         final List<T> asList = new ArrayList<>();
         while (!queue.isEmpty()) {
@@ -289,13 +289,42 @@ public final class Utils {
 
     /**
      * Pop all values from the {@link Stack} and convert them to a stream
-     * */
+     */
     public static <T> Stream<T> popAll(Stack<T> stack) {
         final List<T> asList = new ArrayList<>();
         while (!stack.isEmpty()) {
             asList.add(stack.pop());
         }
         return asList.stream();
+    }
+
+
+    /**
+     * Cast the array of type B to an Array of class A by casting each object separately
+     * @param toCast the array to be cast
+     * @param clazz the target class of the array
+     * @return the casted array
+     * @throws IllegalArgumentException if the object can't be cast
+     * */
+    public static <A, B> A[] castArray(B[] toCast, Class<A> clazz) {
+        final A[] newArr = (A[]) Array.newInstance(clazz, toCast.length);
+        for (int i = 0; i < toCast.length; i++) {
+            if (!isCastable(toCast[i], clazz))
+                throw new IllegalArgumentException(String.format("Object of type %s can't be cast to %s", toCast[i].getClass().getName(), newArr[i].getClass().getName()));
+            newArr[i] = (A) toCast[i];
+        }
+        return newArr;
+    }
+
+    /**
+     * Check if the given Object o can be cast to the class c
+     * @param o the object to check whether it is castable
+     * @param c the class to cast to
+     */
+    public static boolean isCastable(Object o, Class<?> c) {
+        requireNotNull(o);
+        requireNotNull(c);
+        return c.isInstance(o);
     }
 
     /**
