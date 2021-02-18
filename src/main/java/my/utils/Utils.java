@@ -4,12 +4,14 @@ import java.io.Closeable;
 import java.io.File;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
-import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.TemporalAmount;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
+import java.util.Stack;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @SuppressWarnings({"unused", "UnusedReturnValue", "unchecked", "UnnecessaryReturnStatement"})
 public final class Utils {
@@ -23,7 +25,7 @@ public final class Utils {
      * @throws NullPointerException if the given value is null
      */
     public static <T> T requireNotNull(T t) {
-        if (t == null) throw new NullPointerException("Variable was null, though is was required to be not null");
+        if (t == null) throw new NullPointerException("Variable was null, though it was required to be not null");
         return t;
     }
 
@@ -235,31 +237,65 @@ public final class Utils {
 
     /**
      * Get the current time as {@link LocalDateTime}
+     *
      * @return The current time
-     * */
+     */
     public static LocalDateTime now() {
         return LocalDateTime.now();
     }
 
     /**
      * Shift the given {@link LocalDateTime} by the given amounts
-     * @param time the time to start from
-     * @param years The amount of years to shift by
-     * @param months The amount of months to shift by
-     * @param weeks The amount of weeks to shift by
-     * @param days The amount of days to shift by
-     * @param hours The amount of hours to shift by
+     *
+     * @param time    the time to start from
+     * @param years   The amount of years to shift by
+     * @param months  The amount of months to shift by
+     * @param weeks   The amount of weeks to shift by
+     * @param days    The amount of days to shift by
+     * @param hours   The amount of hours to shift by
      * @param minutes The amount of minutes to shift by
      * @param seconds The amount of seconds to shift by
      * @return the new time, with the transformations applied
-     * */
+     */
     public static LocalDateTime shiftTime(LocalDateTime time, long years, long months, long weeks, long days, long hours, long minutes, long seconds) {
         return time.plusYears(years).plusMonths(months).plusWeeks(weeks).plusDays(days).plusHours(hours).plusMinutes(minutes).plusSeconds(seconds);
     }
 
+    /**
+     * Null-safe variant of equals
+     * */
     public static boolean equalsNullSafe(Object first, Object second) {
-        if(first == null || second == null) return false;
+        if (first == null || second == null) return false;
         return first.equals(second);
+    }
+
+    /**
+     * Create a {@link Pair} of the given values
+     * */
+    public static <A, B> Pair<A, B> pairOf(A a, B b) {
+        return new Pair<>(a, b);
+    }
+
+    /**
+     * Poll all values from the {@link Queue} and convert them to a stream
+     * */
+    public static <T> Stream<T> pollAll(Queue<T> queue) {
+        final List<T> asList = new ArrayList<>();
+        while (!queue.isEmpty()) {
+            asList.add(queue.poll());
+        }
+        return asList.stream();
+    }
+
+    /**
+     * Pop all values from the {@link Stack} and convert them to a stream
+     * */
+    public static <T> Stream<T> popAll(Stack<T> stack) {
+        final List<T> asList = new ArrayList<>();
+        while (!stack.isEmpty()) {
+            asList.add(stack.pop());
+        }
+        return asList.stream();
     }
 
     /**
