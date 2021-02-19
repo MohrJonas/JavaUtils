@@ -1,5 +1,7 @@
 package my.utils;
 
+import my.utils.interfaces.*;
+
 import java.io.Closeable;
 import java.io.File;
 import java.lang.reflect.Array;
@@ -336,7 +338,9 @@ public final class Utils {
         requireNotNull(o);
         return Arrays.stream(o.getClass().getDeclaredMethods()).anyMatch(method -> method.getName().equals("toString"));
     }
-
+    /**
+     * Auto-generate a {@link String} representing the given object
+     * */
     public static String toString(Object o) {
         if (hasToString(o)) return o.toString();
         final StringBuilder builder = new StringBuilder(String.format("%s:\n", o.getClass().getName()));

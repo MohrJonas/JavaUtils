@@ -1,4 +1,4 @@
-package my.utils;
+package my.utils.interfaces;
 
 @FunctionalInterface
 public interface IndexedRunnable {
